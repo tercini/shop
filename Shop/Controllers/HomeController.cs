@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Shop.Models;
+using Shop.Models.ViewModels;
 
 namespace Shop.Controllers
 {
@@ -24,7 +25,7 @@ namespace Shop.Controllers
 
         public IActionResult Contact()
         {
-            ViewData["Message"] = "Your contact page.";
+            ViewData["Message"] = "Your contact page.";            
 
             return View();
         }
