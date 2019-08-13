@@ -26,5 +26,21 @@ namespace Shop.Models
 
         public User User { get; set; } 
 
+        public Address ()
+        {
+
+        }
+
+        public Address(int id, string state, string city, string neighborhood, string street, string number, string telephone, User user)
+        {
+            Id = id;
+            State = state;
+            City = city;
+            Neighborhood = neighborhood;
+            Street = street;
+            Number = number;
+            Telephone = telephone;
+            User = user;
+        }
     }
 }

@@ -15,7 +15,21 @@ namespace Shop.Models
 
         public User User { get; set; }
 
+        public double Total { get; set; }
+
         public ICollection<ItemSale> SalesItens { get; set; } = new List<ItemSale>();
 
+        public Sale()
+        {
+
+        }
+
+        public Sale(int id, DateTime date, double total, User user)
+        {
+            Id = id;
+            Date = date;
+            Total = total;
+            User = user;
+        }
     }
 }

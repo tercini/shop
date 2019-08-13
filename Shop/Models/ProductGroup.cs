@@ -17,5 +17,15 @@ namespace Shop.Models
 
         public ICollection<Product> Products { get; set; } = new List<Product>();
 
+        public ProductGroup()
+        {
+
+        }
+
+        public ProductGroup(int id, string descricao)
+        {
+            Id = id;
+            Descricao = descricao;
+        }
     }
 }

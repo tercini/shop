@@ -14,5 +14,6 @@ namespace Shop.Models
         }
 
         public DbSet<Shop.Models.UserGroup> UserGroup { get; set; }
+        public DbSet<Shop.Models.User> User { get; set; }
     }
 }

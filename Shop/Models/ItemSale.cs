@@ -18,5 +18,19 @@ namespace Shop.Models
         public Sale Sale { get; set; }
 
         public Product Product { get; set; }
+
+        public ItemSale()
+        {
+
+        }
+
+        public ItemSale(int id, double amount, double total, Sale sale, Product product)
+        {
+            Id = id;
+            Amount = amount;
+            Total = total;
+            Sale = sale;
+            Product = product;
+        }
     }
 }

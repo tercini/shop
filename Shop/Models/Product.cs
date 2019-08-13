@@ -28,5 +28,18 @@ namespace Shop.Models
 
         public ICollection<ItemSale> ItemsSales {get; set;} 
 
+        public Product()
+        {
+
+        }
+
+        public Product(int id, string descricao, double valor, string observacao, UserGroup userGroup)
+        {
+            Id = id;
+            Descricao = descricao;
+            Valor = valor;
+            Observacao = observacao;
+            UserGroup = userGroup;
+        }
     }
 }

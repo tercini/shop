@@ -18,5 +18,26 @@ namespace Shop.Models
 
         public ICollection<User> Users { get; set; } = new List<User>();
 
+        public UserGroup()
+        {
+
+        }
+
+        public UserGroup(int id, string descricao)
+        {
+            Id = id;
+            Descricao = descricao;
+        }
+
+        public void AddUsers(User u)
+        {
+            Users.Add(u);
+        }
+
+        public void RemoveUsers(User u)
+        {
+            Users.Remove(u);
+        }
+
     }
 }
