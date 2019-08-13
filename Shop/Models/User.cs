@@ -22,6 +22,8 @@ namespace Shop.Models
 
         public string Senha { get; set; }
 
+        public int UserGroupId { get; set; }
+
         public UserGroup UserGroup { get; set; }
 
         public ICollection<Address> Addresses { get; set; } = new List<Address>();
