@@ -37,7 +37,7 @@ namespace Shop
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddDbContext<ShopContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("ShopContext")));
+                    options.UseSqlServer(Configuration.GetConnectionString("ShopContext"), builder =>  builder.MigrationsAssembly("Shop")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
