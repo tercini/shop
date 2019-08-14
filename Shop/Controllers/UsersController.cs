@@ -26,6 +26,12 @@ namespace Shop.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
+        public async Task<IActionResult> Sair()
+        {
+            HttpContext.Session.SetString("IdUsuario", "0");
+            return View("Login");
+        }
+
         // GET: Users
         public async Task<IActionResult> Login()
         {

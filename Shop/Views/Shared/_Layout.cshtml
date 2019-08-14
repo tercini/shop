@@ -59,9 +59,14 @@
                                 <li><a asp-area="" asp-controller="Users" asp-action="Registro">Registrar</a></li>
                                 <li><a asp-area="" asp-controller="Users" asp-action="Login">Entrar</a></li>
                             }
+                            else if (idUsuario == "0")
+                            {
+                                <li><a asp-area="" asp-controller="Users" asp-action="Registro">Registrar</a></li>
+                                <li><a asp-area="" asp-controller="Users" asp-action="Login">Entrar</a></li>
+                            }
                             else
                             {
-                                <li><a asp-area="" asp-controller="Users" asp-action="Login">Sair</a></li>
+                                <li><a asp-area="" asp-controller="Users" asp-action="Sair">Sair</a></li>
                             }
                         }
                         catch
