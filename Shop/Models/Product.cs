@@ -24,7 +24,9 @@ namespace Shop.Models
         [MaxLength(160)]
         public string Observacao { get; set; }
 
-        public UserGroup UserGroup { get; set; }
+        public ProductGroup ProductGroup { get; set; }
+
+        public int ProductGroupId { get; set; }
 
         public ICollection<ItemSale> ItemsSales {get; set;} 
 
@@ -33,13 +35,23 @@ namespace Shop.Models
 
         }
 
-        public Product(int id, string descricao, double valor, string observacao, UserGroup userGroup)
+        public Product(int id, string descricao, double valor, string observacao, ProductGroup productGroup)
         {
             Id = id;
             Descricao = descricao;
             Valor = valor;
             Observacao = observacao;
-            UserGroup = userGroup;
+            ProductGroup = productGroup;
+        }
+
+        public void AddItemsSales(ItemSale s)
+        {
+            ItemsSales.Add(s);
+        }
+
+        public void RemoveItemsSales(ItemSale s)
+        {
+            ItemsSales.Remove(s);
         }
     }
 }

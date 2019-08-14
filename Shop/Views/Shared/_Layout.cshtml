@@ -27,7 +27,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">ZENIX</a>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">ZENIX SKATE SHOP</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -44,6 +44,33 @@
                     </li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    @{
+                        try
+                        {
+                            @using Microsoft.AspNetCore.Http
+                            @inject IHttpContextAccessor HttpContextAccessor;
+                            string idUsuario = "0";
+
+                            idUsuario = HttpContextAccessor.HttpContext.Session.GetString("IdUsuario");
+
+
+                            if (idUsuario == null)
+                            {
+                                <li><a asp-area="" asp-controller="Users" asp-action="Registro">Registrar</a></li>
+                                <li><a asp-area="" asp-controller="Users" asp-action="Login">Entrar</a></li>
+                            }
+                            else
+                            {
+                                <li><a asp-area="" asp-controller="Users" asp-action="Login">Sair</a></li>
+                            }
+                        }
+                        catch
+                        {
+                            <li><a asp-area="" asp-controller="Users" asp-action="Registro">Registrar</a></li>
+                            <li><a asp-area="" asp-controller="Users" asp-action="Login">Entrar</a></li>
+                        }
+                    }
+
                 </ul>
             </div>
         </div>

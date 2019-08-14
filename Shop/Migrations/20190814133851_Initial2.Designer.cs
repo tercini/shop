@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Shop.Models;
 
 namespace Shop.Migrations
 {
     [DbContext(typeof(ShopContext))]
-    partial class ShopContextModelSnapshot : ModelSnapshot
+    [Migration("20190814133851_Initial2")]
+    partial class Initial2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +39,7 @@ namespace Shop.Migrations
 
                     b.Property<string>("Telephone");
 
-                    b.Property<int>("UserId");
+                    b.Property<int?>("UserId");
 
                     b.HasKey("Id");
 
@@ -82,7 +84,7 @@ namespace Shop.Migrations
                     b.Property<string>("Observacao")
                         .HasMaxLength(160);
 
-                    b.Property<int>("ProductGroupId");
+                    b.Property<int?>("ProductGroupId");
 
                     b.Property<double>("Valor");
 
@@ -116,7 +118,7 @@ namespace Shop.Migrations
 
                     b.Property<DateTime>("Date");
 
-                    b.Property<decimal?>("Total");
+                    b.Property<double>("Total");
 
                     b.Property<int?>("UserId");
 
@@ -172,8 +174,7 @@ namespace Shop.Migrations
                 {
                     b.HasOne("Shop.Models.User", "User")
                         .WithMany("Addresses")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Shop.Models.ItemSale", b =>
@@ -191,8 +192,7 @@ namespace Shop.Migrations
                 {
                     b.HasOne("Shop.Models.ProductGroup", "ProductGroup")
                         .WithMany("Products")
-                        .HasForeignKey("ProductGroupId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("ProductGroupId");
                 });
 
             modelBuilder.Entity("Shop.Models.Sale", b =>

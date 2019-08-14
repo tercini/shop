@@ -20,6 +20,8 @@ namespace Shop.Models
         [MaxLength(100)]
         public string Email { get; set; }
 
+        [Required]        
+        [DataType(DataType.Password)]
         public string Senha { get; set; }
 
         public int UserGroupId { get; set; }
@@ -54,7 +56,7 @@ namespace Shop.Models
             Sales.Remove(s);
         }
 
-        public double TotalSales(DateTime initial, DateTime final)
+        public decimal? TotalSales(DateTime initial, DateTime final)
         {
             return Sales.Where(s => s.Date >= initial && s.Date <= final).Sum(s => s.Total);
         }

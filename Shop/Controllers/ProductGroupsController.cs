@@ -9,27 +9,22 @@ using Shop.Models;
 
 namespace Shop.Controllers
 {
-    public class UserGroupsController : Controller
+    public class ProductGroupsController : Controller
     {
         private readonly ShopContext _context;
 
-        public UserGroupsController(ShopContext context)
+        public ProductGroupsController(ShopContext context)
         {
             _context = context;
         }
 
-        public List<UserGroup> FindAll()
-        {
-            return ( _context.UserGroup.OrderBy(x => x.Descricao).ToList());
-        }
-
-        // GET: UserGroups
+        // GET: ProductGroups
         public async Task<IActionResult> Index()
         {
-            return View(await _context.UserGroup.ToListAsync());
+            return View(await _context.ProductGroup.ToListAsync());
         }
 
-        // GET: UserGroups/Details/5
+        // GET: ProductGroups/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -37,39 +32,39 @@ namespace Shop.Controllers
                 return NotFound();
             }
 
-            var userGroup = await _context.UserGroup
+            var productGroup = await _context.ProductGroup
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (userGroup == null)
+            if (productGroup == null)
             {
                 return NotFound();
             }
 
-            return View(userGroup);
+            return View(productGroup);
         }
 
-        // GET: UserGroups/Create
+        // GET: ProductGroups/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: UserGroups/Create
+        // POST: ProductGroups/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Descricao")] UserGroup userGroup)
+        public async Task<IActionResult> Create([Bind("Id,Descricao")] ProductGroup productGroup)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(userGroup);
+                _context.Add(productGroup);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(userGroup);
+            return View(productGroup);
         }
 
-        // GET: UserGroups/Edit/5
+        // GET: ProductGroups/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -77,22 +72,22 @@ namespace Shop.Controllers
                 return NotFound();
             }
 
-            var userGroup = await _context.UserGroup.FindAsync(id);
-            if (userGroup == null)
+            var productGroup = await _context.ProductGroup.FindAsync(id);
+            if (productGroup == null)
             {
                 return NotFound();
             }
-            return View(userGroup);
+            return View(productGroup);
         }
 
-        // POST: UserGroups/Edit/5
+        // POST: ProductGroups/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Descricao")] UserGroup userGroup)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Descricao")] ProductGroup productGroup)
         {
-            if (id != userGroup.Id)
+            if (id != productGroup.Id)
             {
                 return NotFound();
             }
@@ -101,12 +96,12 @@ namespace Shop.Controllers
             {
                 try
                 {
-                    _context.Update(userGroup);
+                    _context.Update(productGroup);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserGroupExists(userGroup.Id))
+                    if (!ProductGroupExists(productGroup.Id))
                     {
                         return NotFound();
                     }
@@ -117,10 +112,10 @@ namespace Shop.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(userGroup);
+            return View(productGroup);
         }
 
-        // GET: UserGroups/Delete/5
+        // GET: ProductGroups/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -128,30 +123,30 @@ namespace Shop.Controllers
                 return NotFound();
             }
 
-            var userGroup = await _context.UserGroup
+            var productGroup = await _context.ProductGroup
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (userGroup == null)
+            if (productGroup == null)
             {
                 return NotFound();
             }
 
-            return View(userGroup);
+            return View(productGroup);
         }
 
-        // POST: UserGroups/Delete/5
+        // POST: ProductGroups/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var userGroup = await _context.UserGroup.FindAsync(id);
-            _context.UserGroup.Remove(userGroup);
+            var productGroup = await _context.ProductGroup.FindAsync(id);
+            _context.ProductGroup.Remove(productGroup);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UserGroupExists(int id)
+        private bool ProductGroupExists(int id)
         {
-            return _context.UserGroup.Any(e => e.Id == id);
+            return _context.ProductGroup.Any(e => e.Id == id);
         }
     }
 }

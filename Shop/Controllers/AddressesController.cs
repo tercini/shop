@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,61 +11,24 @@ using Shop.Services;
 
 namespace Shop.Controllers
 {
-    public class UsersController : Controller
+    public class AddressesController : Controller
     {
         private readonly ShopContext _context;
-        private readonly UserGroupService _userGroupsService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserService _userService;
 
-
-        public UsersController(ShopContext context, UserGroupService userGroupsService, IHttpContextAccessor httpContextAccessor)
+        public AddressesController(ShopContext context, UserService userService)
         {
             _context = context;
-            _userGroupsService = userGroupsService;
-            _httpContextAccessor = httpContextAccessor;
+            _userService = userService;
         }
 
-        // GET: Users
-        public async Task<IActionResult> Login()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(/*[Bind("Id,Name,Email,Senha")]*/ User user)
-        {
-             var vUser = await _context.User.Where(x => x.Email == user.Email && x.Senha == user.Senha).Select(x => new { x.Id, x.UserGroupId, x.Email }).ToListAsync();
-
-            if(vUser.Count != 0)
-            {
-                HttpContext.Session.SetString("IdUsuario", vUser[0].Id.ToString());                
-                //HttpContext.Session.Add("IdUsuario", "value");
-
-                return View("Dashboard");
-            }
-
-            HttpContext.Session.SetString("IdUsuario", "0");
-
-
-            //if(idUsuario.Id != 0)
-            //    return RedirectToAction(nameof(Index));
-
-            return View();
-        }
-
-        public async Task<IActionResult> Registro()
-        {           
-            return View();            
-        }
-
-        // GET: Users
+        // GET: Addresses
         public async Task<IActionResult> Index()
         {
-            return View(await _context.User.ToListAsync());
+            return View(await _context.Address.ToListAsync());
         }
 
-        // GET: Users/Details/5
+        // GET: Addresses/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -74,41 +36,41 @@ namespace Shop.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User
+            var address = await _context.Address
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (user == null)
+            if (address == null)
             {
                 return NotFound();
             }
 
-            return View(user);
+            return View(address);
         }
 
-        // GET: Users/Create
+        // GET: Addresses/Create
         public async Task<IActionResult> Create()
         {
-            var userGroups = await _userGroupsService.FindAll();
-            var viewModel = new UserViewModel { UserGroups = userGroups };
+            var users = await _userService.FindAll();
+            var viewModel = new AddressViewModel { User = users };
             return View(viewModel);
         }
 
-        // POST: Users/Create
+        // POST: Addresses/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(/*[Bind("Id,Name,Email,Senha")]*/ User user)
+        public async Task<IActionResult> Create(/*[Bind("Id,State,City,Neighborhood,Street,Number,Telephone")]*/ Address address)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(user);
+                _context.Add(address);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+            return View(address);
         }
 
-        // GET: Users/Edit/5
+        // GET: Addresses/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -116,22 +78,22 @@ namespace Shop.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User.FindAsync(id);
-            if (user == null)
+            var address = await _context.Address.FindAsync(id);
+            if (address == null)
             {
                 return NotFound();
             }
-            return View(user);
+            return View(address);
         }
 
-        // POST: Users/Edit/5
+        // POST: Addresses/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Email,Senha")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,State,City,Neighborhood,Street,Number,Telephone")] Address address)
         {
-            if (id != user.Id)
+            if (id != address.Id)
             {
                 return NotFound();
             }
@@ -140,12 +102,12 @@ namespace Shop.Controllers
             {
                 try
                 {
-                    _context.Update(user);
+                    _context.Update(address);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(user.Id))
+                    if (!AddressExists(address.Id))
                     {
                         return NotFound();
                     }
@@ -156,10 +118,10 @@ namespace Shop.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+            return View(address);
         }
 
-        // GET: Users/Delete/5
+        // GET: Addresses/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -167,30 +129,30 @@ namespace Shop.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User
+            var address = await _context.Address
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (user == null)
+            if (address == null)
             {
                 return NotFound();
             }
 
-            return View(user);
+            return View(address);
         }
 
-        // POST: Users/Delete/5
+        // POST: Addresses/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _context.User.FindAsync(id);
-            _context.User.Remove(user);
+            var address = await _context.Address.FindAsync(id);
+            _context.Address.Remove(address);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UserExists(int id)
+        private bool AddressExists(int id)
         {
-            return _context.User.Any(e => e.Id == id);
+            return _context.Address.Any(e => e.Id == id);
         }
     }
 }

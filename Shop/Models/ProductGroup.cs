@@ -27,5 +27,15 @@ namespace Shop.Models
             Id = id;
             Descricao = descricao;
         }
+
+        public void AddProducts(Product p)
+        {
+            Products.Add(p);
+        }
+
+        public void RemoveProducts(Product p)
+        {
+            Products.Remove(p);
+        }
     }
 }

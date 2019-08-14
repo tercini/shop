@@ -15,7 +15,8 @@ namespace Shop.Models
 
         public User User { get; set; }
 
-        public double Total { get; set; }
+        
+        public decimal? Total { get; set; }
 
         public ICollection<ItemSale> SalesItens { get; set; } = new List<ItemSale>();
 
@@ -24,7 +25,7 @@ namespace Shop.Models
 
         }
 
-        public Sale(int id, DateTime date, double total, User user)
+        public Sale(int id, DateTime date, decimal total, User user)
         {
             Id = id;
             Date = date;

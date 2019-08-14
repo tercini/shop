@@ -38,6 +38,7 @@ namespace Shop.Models
         {
             Users.Remove(u);
         }
+       
 
     }
 }

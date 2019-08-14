@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Shop.Models;
 
 namespace Shop.Models
 {
@@ -15,5 +16,8 @@ namespace Shop.Models
 
         public DbSet<Shop.Models.UserGroup> UserGroup { get; set; }
         public DbSet<Shop.Models.User> User { get; set; }
+        public DbSet<Shop.Models.ProductGroup> ProductGroup { get; set; }
+        public DbSet<Shop.Models.Product> Product { get; set; }
+        public DbSet<Shop.Models.Address> Address { get; set; }
     }
 }
