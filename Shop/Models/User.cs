@@ -32,6 +32,8 @@ namespace Shop.Models
 
         public ICollection<Sale> Sales { get; set; } = new List<Sale>();
 
+        public Cart Cart { get; set; }
+
         public User()
         {
 

@@ -19,5 +19,6 @@ namespace Shop.Models
         public DbSet<Shop.Models.ProductGroup> ProductGroup { get; set; }
         public DbSet<Shop.Models.Product> Product { get; set; }
         public DbSet<Shop.Models.Address> Address { get; set; }
+        public DbSet<Shop.Models.Cart> Cart { get; set; }
     }
 }

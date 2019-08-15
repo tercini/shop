@@ -3,22 +3,48 @@
     ViewData["Title"] = "Dashboard";
 }
 
-<h2>Dashboard</h2>
+<h2>Menu do Usuário</h2>
 
-<ul class="nav nav-pills nav-stacked">
-    <li class="active"><a href="#">Home</a></li>
-    <li><a href="#">Profile</a></li>
-    <li class="disabled"><a href="#">Disabled</a></li>
-    <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            Dropdown <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li class="divider"></li>
-            <li><a href="#">Separated link</a></li>
-        </ul>
-    </li>
-</ul>
+@{
+    try
+    {
+        @using Microsoft.AspNetCore.Http
+        @inject IHttpContextAccessor HttpContextAccessor;
+        string idUsuario = "0";
+        string idUserGroup = "0";
+
+
+        idUsuario = HttpContextAccessor.HttpContext.Session.GetString("IdUsuario");
+
+        idUserGroup = HttpContextAccessor.HttpContext.Session.GetString("UserGroupId");
+
+        if (idUsuario != "" && idUsuario != "0" && idUsuario != null)
+        {
+            if (idUserGroup == "2")
+            {
+                <ul class="nav nav-pills nav-stacked">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li class=""><a asp-area="" asp-controller="UserGroups" asp-action="Index">Grupo de Usuários</a></li>
+                    <li class=""><a asp-area="" asp-controller="Users" asp-action="Index">Usuários</a></li>
+                    <li class=""><a asp-area="" asp-controller="ProductGroups" asp-action="Index">Grupo de Produtos</a></li>
+                    <li class=""><a asp-area="" asp-controller="Products" asp-action="Index">Produtos</a></li>
+                    <li class=""><a asp-area="" asp-controller="Addresses" asp-action="Index">Endereço</a></li>
+                </ul>
+            }
+            else if (idUserGroup == "1")
+            {
+                <ul class="nav nav-pills nav-stacked">
+                    <li class="active"><a href="#">Home</a></li>
+                    <li class=""><a asp-area="" asp-controller="Addresses" asp-action="AddressUser">Cadastrar Endereço</a></li>
+                    <li class=""><a asp-area="" asp-controller="Addresses" asp-action="MyAddress">Consultar Endereço</a></li>                    
+                </ul>
+            }
+        }
+    }
+    catch
+    {
+        <li><a asp-area="" asp-controller="Users" asp-action="Registro">Registrar</a></li>
+        <li><a asp-area="" asp-controller="Users" asp-action="Login">Entrar</a></li>
+    }
+}
+

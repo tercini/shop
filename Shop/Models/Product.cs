@@ -28,8 +28,12 @@ namespace Shop.Models
 
         public int ProductGroupId { get; set; }
 
-        public ICollection<ItemSale> ItemsSales {get; set;} 
+        public ICollection<Cart> Carts { get; set; }
 
+        public ICollection<ItemSale> ItemsSales {get; set;}
+
+        public User User { get; set; }
+        
         public Product()
         {
 
@@ -41,7 +45,7 @@ namespace Shop.Models
             Descricao = descricao;
             Valor = valor;
             Observacao = observacao;
-            ProductGroup = productGroup;
+            ProductGroup = productGroup;            
         }
 
         public void AddItemsSales(ItemSale s)
@@ -52,6 +56,16 @@ namespace Shop.Models
         public void RemoveItemsSales(ItemSale s)
         {
             ItemsSales.Remove(s);
+        }
+
+        public void AddCarts(Cart c)
+        {
+            Carts.Add(c);
+        }
+
+        public void RemoveCarts(Cart c)
+        {
+            Carts.Remove(c);
         }
     }
 }

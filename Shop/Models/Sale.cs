@@ -14,7 +14,6 @@ namespace Shop.Models
         public DateTime Date { get; set; }
 
         public User User { get; set; }
-
         
         public decimal? Total { get; set; }
 

@@ -17,13 +17,47 @@ namespace Shop.Controllers
         private readonly ShopContext _context;
         private readonly UserGroupService _userGroupsService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly UserService _userService;
 
 
-        public UsersController(ShopContext context, UserGroupService userGroupsService, IHttpContextAccessor httpContextAccessor)
+        public UsersController(ShopContext context, UserGroupService userGroupsService, IHttpContextAccessor httpContextAccessor, UserService userService)
         {
             _context = context;
             _userGroupsService = userGroupsService;
             _httpContextAccessor = httpContextAccessor;
+            _userService = userService;
+        }
+
+        public int VerificarAutenticacao()
+        {
+            string idUser = "0";
+            try
+            {
+                idUser = HttpContext.Session.GetString("IdUsuario");
+            }
+            catch
+            {
+                idUser = "0";
+            }
+            
+            if(idUser != "" && idUser  != "0" && idUser != null)
+            {
+                return 1;
+            }
+            else
+            {
+                return 0;
+            }
+            
+        }
+
+        public async Task<IActionResult> Dashboard()
+        {
+            if (_userService.VerificarAutenticacao() == 0)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+            return View(nameof(Dashboard));
         }
 
         public async Task<IActionResult> Sair()
@@ -46,17 +80,19 @@ namespace Shop.Controllers
 
             if(vUser.Count != 0)
             {
-                HttpContext.Session.SetString("IdUsuario", vUser[0].Id.ToString());                
-                //HttpContext.Session.Add("IdUsuario", "value");
+                HttpContext.Session.SetString("IdUsuario", vUser[0].Id.ToString());
+                HttpContext.Session.SetString("UserGroupId", vUser[0].UserGroupId.ToString());
 
-                return View("Dashboard");
+                string teste = HttpContext.Session.GetString("UserGroupId");
+
+                if (vUser[0].UserGroupId == 1)
+                    return View("Dashboard");
+                else
+                    return View("Dashboard");
             }
 
             HttpContext.Session.SetString("IdUsuario", "0");
-
-
-            //if(idUsuario.Id != 0)
-            //    return RedirectToAction(nameof(Index));
+            HttpContext.Session.SetString("UserGroupId", "0");
 
             return View();
         }
@@ -69,12 +105,22 @@ namespace Shop.Controllers
         // GET: Users
         public async Task<IActionResult> Index()
         {
+            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
             return View(await _context.User.ToListAsync());
         }
 
         // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -93,6 +139,11 @@ namespace Shop.Controllers
         // GET: Users/Create
         public async Task<IActionResult> Create()
         {
+            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
             var userGroups = await _userGroupsService.FindAll();
             var viewModel = new UserViewModel { UserGroups = userGroups };
             return View(viewModel);
@@ -105,6 +156,11 @@ namespace Shop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(/*[Bind("Id,Name,Email,Senha")]*/ User user)
         {
+            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(user);
@@ -117,6 +173,11 @@ namespace Shop.Controllers
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -137,6 +198,11 @@ namespace Shop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Email,Senha")] User user)
         {
+            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
             if (id != user.Id)
             {
                 return NotFound();
@@ -168,6 +234,11 @@ namespace Shop.Controllers
         // GET: Users/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -188,6 +259,11 @@ namespace Shop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
             var user = await _context.User.FindAsync(id);
             _context.User.Remove(user);
             await _context.SaveChangesAsync();

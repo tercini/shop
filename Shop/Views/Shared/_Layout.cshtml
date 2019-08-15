@@ -6,7 +6,7 @@
     <title>@ViewData["Title"] - Shop</title>
 
     <environment include="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-readable.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-yeti.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment exclude="Development">
@@ -33,7 +33,7 @@
                 <ul class="nav navbar-nav">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Shop<b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">DropDown<b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li>@Html.ActionLink("Produto", "Index", "Home")</li>
                             <li>@Html.ActionLink("Camisetas", "Index", "Home")</li>
@@ -42,8 +42,10 @@
                             <li>@Html.ActionLink("Calças", "Index", "Home")</li>
                         </ul>
                     </li>
+                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Shop</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+
                     @{
                         try
                         {
@@ -66,6 +68,7 @@
                             }
                             else
                             {
+                                <li><a asp-area="" asp-controller="Users" asp-action="Dashboard">Menu</a></li>
                                 <li><a asp-area="" asp-controller="Users" asp-action="Sair">Sair</a></li>
                             }
                         }

@@ -10,31 +10,33 @@ using Shop.Services;
 
 namespace Shop.Controllers
 {
-    public class ProductGroupsController : Controller
+    public class CartsController : Controller
     {
         private readonly ShopContext _context;
         private readonly UserService _userService;
 
-        public ProductGroupsController(ShopContext context, UserService userService)
+        public CartsController(ShopContext context, UserService userService)
         {
             _context = context;
-            _userService = userService;            
+            _userService = userService;
         }
 
-        // GET: ProductGroups
+        // GET: Carts
         public async Task<IActionResult> Index()
         {
-            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            if (_userService.VerificarAutenticacao() == 0)
             {
                 return RedirectToAction("Login", "Users");
             }
-            return View(await _context.ProductGroup.ToListAsync());
+
+            var shopContext = _context.Cart.Include(c => c.User);
+            return View(await shopContext.ToListAsync());
         }
 
-        // GET: ProductGroups/Details/5
+        // GET: Carts/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            if (_userService.VerificarAutenticacao() == 0)
             {
                 return RedirectToAction("Login", "Users");
             }
@@ -44,51 +46,55 @@ namespace Shop.Controllers
                 return NotFound();
             }
 
-            var productGroup = await _context.ProductGroup
+            var cart = await _context.Cart
+                .Include(c => c.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (productGroup == null)
+            if (cart == null)
             {
                 return NotFound();
             }
 
-            return View(productGroup);
+            return View(cart);
         }
 
-        // GET: ProductGroups/Create
+        // GET: Carts/Create
         public IActionResult Create()
         {
-            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            if (_userService.VerificarAutenticacao() == 0)
             {
                 return RedirectToAction("Login", "Users");
             }
+
+            ViewData["UserId"] = new SelectList(_context.User, "Id", "Email");
             return View();
         }
 
-        // POST: ProductGroups/Create
+        // POST: Carts/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Descricao")] ProductGroup productGroup)
+        public async Task<IActionResult> Create([Bind("Id,Amount,Total,UserId")] Cart cart)
         {
-            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            if (_userService.VerificarAutenticacao() == 0)
             {
                 return RedirectToAction("Login", "Users");
             }
 
             if (ModelState.IsValid)
             {
-                _context.Add(productGroup);
+                _context.Add(cart);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(productGroup);
+            ViewData["UserId"] = new SelectList(_context.User, "Id", "Email", cart.UserId);
+            return View(cart);
         }
 
-        // GET: ProductGroups/Edit/5
+        // GET: Carts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            if (_userService.VerificarAutenticacao() == 0)
             {
                 return RedirectToAction("Login", "Users");
             }
@@ -98,27 +104,28 @@ namespace Shop.Controllers
                 return NotFound();
             }
 
-            var productGroup = await _context.ProductGroup.FindAsync(id);
-            if (productGroup == null)
+            var cart = await _context.Cart.FindAsync(id);
+            if (cart == null)
             {
                 return NotFound();
             }
-            return View(productGroup);
+            ViewData["UserId"] = new SelectList(_context.User, "Id", "Email", cart.UserId);
+            return View(cart);
         }
 
-        // POST: ProductGroups/Edit/5
+        // POST: Carts/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Descricao")] ProductGroup productGroup)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Amount,Total,UserId")] Cart cart)
         {
-            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            if (_userService.VerificarAutenticacao() == 0)
             {
                 return RedirectToAction("Login", "Users");
             }
 
-            if (id != productGroup.Id)
+            if (id != cart.Id)
             {
                 return NotFound();
             }
@@ -127,12 +134,12 @@ namespace Shop.Controllers
             {
                 try
                 {
-                    _context.Update(productGroup);
+                    _context.Update(cart);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductGroupExists(productGroup.Id))
+                    if (!CartExists(cart.Id))
                     {
                         return NotFound();
                     }
@@ -143,13 +150,14 @@ namespace Shop.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(productGroup);
+            ViewData["UserId"] = new SelectList(_context.User, "Id", "Email", cart.UserId);
+            return View(cart);
         }
 
-        // GET: ProductGroups/Delete/5
+        // GET: Carts/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            if (_userService.VerificarAutenticacao() == 0)
             {
                 return RedirectToAction("Login", "Users");
             }
@@ -159,36 +167,36 @@ namespace Shop.Controllers
                 return NotFound();
             }
 
-            var productGroup = await _context.ProductGroup
+            var cart = await _context.Cart
+                .Include(c => c.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (productGroup == null)
+            if (cart == null)
             {
                 return NotFound();
             }
 
-            return View(productGroup);
+            return View(cart);
         }
 
-        // POST: ProductGroups/Delete/5
+        // POST: Carts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            if (_userService.VerificarAutenticacao() == 0)
             {
                 return RedirectToAction("Login", "Users");
             }
 
-            var productGroup = await _context.ProductGroup.FindAsync(id);
-            _context.ProductGroup.Remove(productGroup);
+            var cart = await _context.Cart.FindAsync(id);
+            _context.Cart.Remove(cart);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProductGroupExists(int id)
+        private bool CartExists(int id)
         {
-
-            return _context.ProductGroup.Any(e => e.Id == id);
+            return _context.Cart.Any(e => e.Id == id);
         }
     }
 }

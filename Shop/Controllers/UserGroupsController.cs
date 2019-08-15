@@ -6,16 +6,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Shop.Models;
+using Shop.Services;
 
 namespace Shop.Controllers
 {
     public class UserGroupsController : Controller
     {
         private readonly ShopContext _context;
+        private readonly UserService _userService;
 
-        public UserGroupsController(ShopContext context)
+        public UserGroupsController(ShopContext context, UserService userService)
         {
             _context = context;
+            _userService = userService;
         }
 
         public List<UserGroup> FindAll()
@@ -26,12 +29,22 @@ namespace Shop.Controllers
         // GET: UserGroups
         public async Task<IActionResult> Index()
         {
+            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
             return View(await _context.UserGroup.ToListAsync());
         }
 
         // GET: UserGroups/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -50,6 +63,11 @@ namespace Shop.Controllers
         // GET: UserGroups/Create
         public IActionResult Create()
         {
+            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
             return View();
         }
 
@@ -60,6 +78,11 @@ namespace Shop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Descricao")] UserGroup userGroup)
         {
+            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(userGroup);
@@ -72,6 +95,11 @@ namespace Shop.Controllers
         // GET: UserGroups/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -92,6 +120,11 @@ namespace Shop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Descricao")] UserGroup userGroup)
         {
+            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
             if (id != userGroup.Id)
             {
                 return NotFound();
@@ -123,6 +156,11 @@ namespace Shop.Controllers
         // GET: UserGroups/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -143,6 +181,11 @@ namespace Shop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
             var userGroup = await _context.UserGroup.FindAsync(id);
             _context.UserGroup.Remove(userGroup);
             await _context.SaveChangesAsync();

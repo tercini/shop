@@ -15,22 +15,35 @@ namespace Shop.Controllers
     {
         private readonly ShopContext _context;
         private readonly ProductGroupService _productGroupService;
+        private readonly UserService _userService;
 
-        public ProductsController(ShopContext context, ProductGroupService productGroupService)
+        public ProductsController(ShopContext context, ProductGroupService productGroupService, UserService userService)
         {
             _context = context;
             _productGroupService = productGroupService;
+            _userService = userService;
+
         }
 
         // GET: Products
         public async Task<IActionResult> Index()
         {
+            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
             return View(await _context.Product.ToListAsync());
         }
 
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -49,6 +62,11 @@ namespace Shop.Controllers
         // GET: Products/Create
         public async Task<IActionResult> Create()
         {
+            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
             var productGroups = await _productGroupService.FindAll();
             var viewModel = new ProductViewModel { ProductGroups = productGroups };
             return View(viewModel);
@@ -61,6 +79,11 @@ namespace Shop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(/*[Bind("Id,Descricao,Valor,Observacao")]*/ Product product)
         {
+            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(product);
@@ -73,6 +96,11 @@ namespace Shop.Controllers
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -93,6 +121,11 @@ namespace Shop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Descricao,Valor,Observacao")] Product product)
         {
+            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
             if (id != product.Id)
             {
                 return NotFound();
@@ -124,6 +157,11 @@ namespace Shop.Controllers
         // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -144,6 +182,11 @@ namespace Shop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
+            {
+                return RedirectToAction("Login", "Users");
+            }
+
             var product = await _context.Product.FindAsync(id);
             _context.Product.Remove(product);
             await _context.SaveChangesAsync();
