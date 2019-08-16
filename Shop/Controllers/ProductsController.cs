@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +19,7 @@ namespace Shop.Controllers
         private readonly ShopContext _context;
         private readonly ProductGroupService _productGroupService;
         private readonly UserService _userService;
+        IHostingEnvironment _appEnvironment;
 
         public ProductsController(ShopContext context, ProductGroupService productGroupService, UserService userService)
         {
@@ -77,11 +81,31 @@ namespace Shop.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(/*[Bind("Id,Descricao,Valor,Observacao")]*/ Product product)
+        public async Task<IActionResult> Create(/*[Bind("Id,Descricao,Valor,Observacao")]*/ Product product, IFormFile formFile)
         {
             if (_userService.VerificarAutenticacao() == 0 || _userService.VerificarAutenticacao() == 1)
             {
                 return RedirectToAction("Login", "Users");
+            }
+
+            try
+            {
+                formFile = product.ImgDoc;
+                string extensao = Path.GetExtension(formFile.FileName);
+                var filePath = _appEnvironment.WebRootPath + Path.DirectorySeparatorChar + "Images" + Path.DirectorySeparatorChar + System.Guid.NewGuid().ToString() + extensao;
+                if (formFile.Length > 0)
+                {
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await formFile.CopyToAsync(stream);
+                    }
+                }
+                product.Imagem = filePath.Replace("\\", "\\\\");
+                //formulario.Arquivo = formulario.Arquivo.Replace("\\", "\\\\");
+            }
+            catch
+            {
+
             }
 
             if (ModelState.IsValid)

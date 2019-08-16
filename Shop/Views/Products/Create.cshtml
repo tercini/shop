@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Create";
+    string vArquivo = "";
 }
 
 <h2>Create</h2>
@@ -10,7 +11,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form enctype="multipart/form-data" asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Product.Descricao" class="control-label"></label>
@@ -30,6 +31,25 @@
             <div class="form-group">
                 <label asp-for="Product.ProductGroupId" class="control-label"></label>
                 <select asp-for="Product.ProductGroupId" asp-items="@(new SelectList(Model.ProductGroups, "Id", "Descricao"))" class="form-control"></select>
+            </div>
+            <div class="form-group">
+                <div class="form-group">
+                    <label asp-for="Product.Imagem" class="control-label"></label>
+                    <div id="divImg" class="form-group">
+                        @if (vArquivo == "")
+                        {
+                            <img src="/Images/x.png" id="imagem" name="imagem" class="form-control" />
+                        }
+                        else
+                        {
+                            <img src="@vArquivo" id="imagem" name="imagem" class="form-control" />
+                        }
+                    </div>
+
+                    <input type="file" class="form-control" asp-for="ImgDoc" id="file" onchange="enviar_imagem(this);">
+                    <input type="button" class="btn btn-block btn-primary" name="iptExcArqCreDoc" id="iptExcArqCreDoc" value="Excluir arquivo" onclick="document.getElementById('imagem').src = '@Url.Content("~/Images/x.png")'; document.getElementById('file').value = '';" />
+                    <span asp-validation-for="ImgDoc" class="text-danger"></span>
+                </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />
